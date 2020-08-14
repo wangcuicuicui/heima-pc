@@ -4,16 +4,16 @@
     <el-aside
       :width="isCollapse?'64px':'200px'"
       class="aside">
-      <div class="logo" :class="{minLogo:isCollapse}"></div>
+      <div :class="{minLogo:isCollapse}" class="logo"></div>
       <el-menu
-        default-active="2"
-        class="nav-menu"
-        background-color="#002033"
-        text-color="#fff"
-        active-text-color="#ffd04b"
         :collapse="isCollapse"
         :collapse-transition="false"
-        :router="true">
+        :router="true"
+        active-text-color="#ffd04b"
+        background-color="#002033"
+        class="nav-menu"
+        default-active="2"
+        text-color="#fff">
         <el-menu-item index="/">
           <i class="el-icon-s-home"></i>
           <span slot="title">首页</span>
@@ -47,21 +47,24 @@
     <el-container>
 <!--      头部-->
       <el-header class="header">
-        <div @click="hswitch">
+        <div @click="hSwitch">
           <i :class="isCollapse? 'el-icon-s-fold' : 'el-icon-s-unfold'"></i>
           <span>黑马程序员</span>
         </div>
         <el-dropdown>
           <!-- 默认插槽：用来显示触发开关 -->
           <div class="avatar-wrap">
-            <img class="avatar"  alt="">
-            <span>用户昵称</span>
+            <img :src="userInfo.photo"
+                 alt=""
+                 class="avatar">
+            <span>{{userInfo.name}}</span>
             <i class="el-icon-arrow-down el-icon--right"></i>
           </div>
           <!--具名插槽：用来显示下拉内容 -->
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>设置</el-dropdown-item>
-            <el-dropdown-item>退出</el-dropdown-item>
+<!--            事件修饰符.native 事件绑定无效的时候尝试添加-->
+            <el-dropdown-item @click.native="goSetting">设置</el-dropdown-item>
+            <el-dropdown-item @click.native="goLogin">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
@@ -74,17 +77,56 @@
 </template>
 
 <script>
+import { userGet } from '../../api/user'
+import { clearUserInfo } from '../../store'
 export default {
   data () {
     return {
       // 侧边栏 为true的时候是收起状态
-      isCollapse: true
+      isCollapse: false,
+      userInfo: {}
     }
   },
   methods: {
-    hswitch () {
+    hSwitch () {
       this.isCollapse = !this.isCollapse
+    },
+    hGetUserInfo () {
+      userGet().then(res => {
+        this.userInfo = res.data.data
+      })
+    },
+    goSetting () {
+      console.log(111)
+      this.$router.push({
+        path: '/setting'
+      })
+    },
+    goLogin () {
+    //  先进行询问
+      this.$confirm('此操作将会退出, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+        clearUserInfo()
+        this.$router.push({
+          path: '/login'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
+  },
+  mounted () {
+    this.hGetUserInfo()
   }
 }
 </script>

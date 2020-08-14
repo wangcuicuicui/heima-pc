@@ -37,6 +37,7 @@
 
 <script>
 import { login } from '../../api/user'
+import { saveUserInfo } from '../../store'
 export default {
   data () {
     // 1. 定义校验函数
@@ -97,6 +98,8 @@ export default {
       this.loadingFlag = true
       // 获取请求
       login(this.from.mobile, this.from.code).then(res => {
+        // 保存token
+        saveUserInfo(res.data.data)
         // 加载状态关闭
         this.loadingFlag = false
         // 前求成功显示提示
@@ -104,12 +107,17 @@ export default {
           message: '登录成功！',
           type: 'success'
         })
+        this.$router.push({
+          path: '/'
+        })
         // eslint-disable-next-line handle-callback-err
       }).catch(error => {
+        console.log((error))
         this.$message({
           showClose: true,
           message: '账号密码错误，请重新输入',
           type: 'error'
+
         })
         this.loadingFlag = false
       })

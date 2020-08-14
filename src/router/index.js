@@ -9,6 +9,9 @@ import Image from '../views/Image'
 import Comment from '../views/Comment'
 import Fans from '../views/Fans'
 import Setting from '../views/Setting'
+import Home from '../views/Home'
+import NotFound from '../views/NotFound'
+import { getUserInfo } from '../store'
 Vue.use(VueRouter)
 
 const routes = [
@@ -16,6 +19,7 @@ const routes = [
     path: '/',
     name: 'Layout',
     component: Layout,
+    redirect: '/home',
     // 二级路由
     // 文章管理
     children: [
@@ -25,7 +29,8 @@ const routes = [
       { path: 'image', name: 'Image', component: Image },
       { path: 'comment', name: 'Comment', component: Comment },
       { path: 'fans', name: 'Fans', component: Fans },
-      { path: 'setting', name: 'Setting', component: Setting }
+      { path: 'setting', name: 'Setting', component: Setting },
+      { path: 'home', name: 'Home', component: Home }
     ]
   },
   {
@@ -34,12 +39,8 @@ const routes = [
     component: Login
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '*',
+    component: NotFound
   }
 ]
 
@@ -47,4 +48,16 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  if (to.path !== '/login') {
+    const user = getUserInfo()
+    if (user && user.token) {
+      next()
+    } else {
+      next('/login')
+    }
+  } else {
+    next()
+  }
+})
 export default router

@@ -13,3 +13,11 @@ export const login = function (mobile, code) {
     }
   })
 }
+
+export const userGet = function () {
+  // 返回一个promise对象
+  return request({
+    url: '/mp/v1_0/user/profile',
+    method: 'GET'
+  })
+}
