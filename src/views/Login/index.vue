@@ -1,3 +1,4 @@
+<script src="../../api/user.js"></script>
 <template>
   <div class="login-container">
     <div class="login-form-wrap">
@@ -58,9 +59,9 @@ export default {
     }
     return {
       from: {
-        mobile: '',
-        code: '',
-        // 只有一个、的时候是布尔值
+        mobile: '13911111111',
+        code: '246810',
+        // 只有一个的时候是布尔值
         // 多个的时候是数组形式
         checkFlag: false
       },

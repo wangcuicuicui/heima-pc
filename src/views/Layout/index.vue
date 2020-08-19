@@ -1,6 +1,6 @@
 <template>
   <el-container class="layout-container">
-<!--    侧边栏-->
+    <!--    侧边栏-->
     <el-aside
       :width="isCollapse?'64px':'200px'"
       class="aside">
@@ -27,8 +27,8 @@
           <span slot="title">素材列表</span>
         </el-menu-item>
         <el-menu-item index="/addArticle">
-            <i class="el-icon-s-promotion"></i>
-            <span slot="title">发表文章</span>
+          <i class="el-icon-s-promotion"></i>
+          <span slot="title">发表文章</span>
         </el-menu-item>
         <el-menu-item index="/comment">
           <i class="el-icon-chat-dot-round"></i>
@@ -45,7 +45,7 @@
       </el-menu>
     </el-aside>
     <el-container>
-<!--      头部-->
+      <!--      头部-->
       <el-header class="header">
         <div @click="hSwitch">
           <i :class="isCollapse? 'el-icon-s-fold' : 'el-icon-s-unfold'"></i>
@@ -62,13 +62,13 @@
           </div>
           <!--具名插槽：用来显示下拉内容 -->
           <el-dropdown-menu slot="dropdown">
-<!--            事件修饰符.native 事件绑定无效的时候尝试添加-->
+            <!--            事件修饰符.native 事件绑定无效的时候尝试添加-->
             <el-dropdown-item @click.native="goSetting">设置</el-dropdown-item>
             <el-dropdown-item @click.native="goLogin">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
-<!--      主题-->
+      <!--      主题-->
       <el-main class="main">
         <router-view/>
       </el-main>
@@ -77,58 +77,71 @@
 </template>
 
 <script>
-import { userGet } from '../../api/user'
-import { clearUserInfo } from '../../store'
-export default {
-  data () {
-    return {
-      // 侧边栏 为true的时候是收起状态
-      isCollapse: false,
-      userInfo: {}
-    }
-  },
-  methods: {
-    hSwitch () {
-      this.isCollapse = !this.isCollapse
+  import { userGet } from '../../api/user'
+  import { clearUserInfo } from '../../store'
+
+  export default {
+    data () {
+      return {
+        // 侧边栏 为true的时候是收起状态
+        isCollapse: false,
+        userInfo: {}
+      }
     },
-    hGetUserInfo () {
-      userGet().then(res => {
-        this.userInfo = res.data.data
-      })
-    },
-    goSetting () {
-      console.log(111)
-      this.$router.push({
-        path: '/setting'
-      })
-    },
-    goLogin () {
-    //  先进行询问
-      this.$confirm('此操作将会退出, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+    methods: {
+      hSwitch () {
+        this.isCollapse = !this.isCollapse
+      },
+      hGetUserInfo () {
+        userGet().then(res => {
+          this.userInfo = res.data.data
         })
-        clearUserInfo()
+      },
+      goSetting () {
+        if (this.$route.path === '/setting') {
+          return
+        }
         this.$router.push({
-          path: '/login'
+          path: '/setting'
         })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
+      },
+      goLogin () {
+        //  先进行询问
+        this.$confirm('此操作将会退出, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          clearUserInfo()
+          this.$router.push({
+            path: '/login'
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
         })
+      }
+    },
+    mounted () {
+      this.hGetUserInfo()
+      //  进行name接值
+      this.eventBus.$on('getUserName', (name) => {
+        //  payLoad表示将来要传递的name值
+        this.userInfo.name = name
+      })
+      //  进行图片接值
+      this.eventBus.$on('getUserPhoto', (url) => {
+        //  payLoad表示将来要传递的name值
+        this.userInfo.photo = url
       })
     }
-  },
-  mounted () {
-    this.hGetUserInfo()
   }
-}
 </script>
 
 <style lang="less" scoped>
