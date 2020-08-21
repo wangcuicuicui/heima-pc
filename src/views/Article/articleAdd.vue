@@ -100,6 +100,7 @@
       hGetChannels () {
         getChannels().then(res => {
           this.channels = res.data.data.channels
+          console.log(this.channels)
         })
       },
       // 发布文章

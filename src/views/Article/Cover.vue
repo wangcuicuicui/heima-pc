@@ -61,6 +61,12 @@
     props: {
       picnum: {
         type: Number
+      },
+      fImages: {
+        type: Array,
+        default: function () {
+          return []
+        }
       }
     },
     data () {
@@ -72,8 +78,8 @@
         dialogVisible: false,
         curIndex: 0,
         curImage: null,
-        images: new Array(this.picnum),// 缓存选中的图片
-        spanShow: [true,true,true]
+        images: this.fImages.length > 0 ? this.fImages : new Array(this.picnum),// 缓存选中的图片
+        spanShow: [true, true, true]
       }
     },
     methods: {
@@ -132,7 +138,7 @@
         //  images[index] = curimage
         this.images[this.curIndex] = this.curImage.url
         this.dialogVisible = false
-        if (this.images[this.curIndex]){
+        if (this.images[this.curIndex]) {
           this.spanShow[this.curIndex] = false
         }
       },
@@ -142,6 +148,9 @@
     },
     mounted () {
       this.hGetImages()
+      if (this.images[this.curIndex]) {
+        this.spanShow[this.curIndex] = false
+      }
     }
   }
 </script>

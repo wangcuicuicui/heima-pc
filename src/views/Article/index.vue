@@ -167,10 +167,12 @@ export default {
     // index -> scope.$index  从0开始代表当前操作的是数据的第几项
     // row -> scope.row    代表的数据list中的每一项 {}
     handleEdit (index, row) {
+      const id = row.id.toString()
+      console.log(row.id)
       this.$router.push({
         path: '/editArticle',
         query: {
-          id: row.id
+          id: id
         }
       })
     },

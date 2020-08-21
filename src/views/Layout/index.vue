@@ -77,71 +77,71 @@
 </template>
 
 <script>
-  import { userGet } from '../../api/user'
-  import { clearUserInfo } from '../../store'
+import { userGet } from '../../api/user'
+import { clearUserInfo } from '../../store'
 
-  export default {
-    data () {
-      return {
-        // 侧边栏 为true的时候是收起状态
-        isCollapse: false,
-        userInfo: {}
-      }
+export default {
+  data () {
+    return {
+      // 侧边栏 为true的时候是收起状态
+      isCollapse: false,
+      userInfo: {}
+    }
+  },
+  methods: {
+    hSwitch () {
+      this.isCollapse = !this.isCollapse
     },
-    methods: {
-      hSwitch () {
-        this.isCollapse = !this.isCollapse
-      },
-      hGetUserInfo () {
-        userGet().then(res => {
-          this.userInfo = res.data.data
-        })
-      },
-      goSetting () {
-        if (this.$route.path === '/setting') {
-          return
-        }
-        this.$router.push({
-          path: '/setting'
-        })
-      },
-      goLogin () {
-        //  先进行询问
-        this.$confirm('此操作将会退出, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-          clearUserInfo()
-          this.$router.push({
-            path: '/login'
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-      }
-    },
-    mounted () {
-      this.hGetUserInfo()
-      //  进行name接值
-      this.eventBus.$on('getUserName', (name) => {
-        //  payLoad表示将来要传递的name值
-        this.userInfo.name = name
+    hGetUserInfo () {
+      userGet().then(res => {
+        this.userInfo = res.data.data
       })
-      //  进行图片接值
-      this.eventBus.$on('getUserPhoto', (url) => {
-        //  payLoad表示将来要传递的name值
-        this.userInfo.photo = url
+    },
+    goSetting () {
+      if (this.$route.path === '/setting') {
+        return
+      }
+      this.$router.push({
+        path: '/setting'
+      })
+    },
+    goLogin () {
+      //  先进行询问
+      this.$confirm('此操作将会退出, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+        clearUserInfo()
+        this.$router.push({
+          path: '/login'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     }
+  },
+  mounted () {
+    this.hGetUserInfo()
+    //  进行name接值
+    this.eventBus.$on('getUserName', (name) => {
+      //  payLoad表示将来要传递的name值
+      this.userInfo.name = name
+    })
+    //  进行图片接值
+    this.eventBus.$on('getUserPhoto', (url) => {
+      //  payLoad表示将来要传递的name值
+      this.userInfo.photo = url
+    })
   }
+}
 </script>
 
 <style lang="less" scoped>

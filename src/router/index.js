@@ -2,14 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login/index'
 import Layout from '../views/Layout'
-import Article from '../views/Article'
-import ArticleAdd from '../views/Article/articleAdd'
-import ArticleEdit from '../views/Article/articleEdit'
-import Image from '../views/Image'
-import Comment from '../views/Comment'
-import Fans from '../views/Fans'
-import Setting from '../views/Setting'
-import Home from '../views/Home'
 import NotFound from '../views/NotFound'
 import { getUserInfo } from '../store'
 Vue.use(VueRouter)
@@ -23,14 +15,14 @@ const routes = [
     // 二级路由
     // 文章管理
     children: [
-      { path: 'article', name: 'Article', component: Article },
-      { path: 'addArticle', name: 'AddArticle', component: ArticleAdd },
-      { path: 'editArticle', name: 'EditArticle', component: ArticleEdit },
-      { path: 'image', name: 'Image', component: Image },
-      { path: 'comment', name: 'Comment', component: Comment },
-      { path: 'fans', name: 'Fans', component: Fans },
-      { path: 'setting', name: 'Setting', component: Setting },
-      { path: 'home', name: 'Home', component: Home }
+      { path: 'article', name: 'Article', component: () => import(/* webackChunckName:"Article" */ '../views/Article') },
+      { path: 'addArticle', name: 'AddArticle', component: () => import(/* webackChunckName:"AddArticle" */ '../views/Article/articleAdd') },
+      { path: 'editArticle', name: 'EditArticle', component: () => import(/* webackChunckName:"EditArticle" */ '../views/Article/articleEdit') },
+      { path: 'image', name: 'Image', component: () => import(/* webackChunckName:"Image" */ '../views/Image') },
+      { path: 'comment', name: 'Comment', component: () => import(/* webackChunckName:"Comment" */ '../views/Comment') },
+      { path: 'fans', name: 'Fans', component: () => import(/* webackChunckName:"Fans" */ '../views/Fans') },
+      { path: 'setting', name: 'Setting', component: () => import(/* webackChunckName:"Setting" */ '../views/Setting') },
+      { path: 'home', name: 'Home', component: () => import(/* webackChunckName:"Home" */ '../views/Home') }
     ]
   },
   {
